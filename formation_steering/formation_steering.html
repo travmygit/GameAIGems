@@ -1,125 +1,108 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8" />
 	<title>Formation Demo</title>
-	
+
 	<style type="text/css">
-	h1 { font-family: sans-serif; text-align:center; }
-	h3 { font-family: sans-serif; text-align:center; }
-	body { margin:0px auto; font-family:sans-serif; background-color:#FFF; }
-	a { text-decoration:none; }
+		h1 {
+			text-align: center;
+		}
+
+		h3 {
+			text-align: center;
+		}
 	</style>
 </head>
 
 <body>
+	<canvas id="canvas" width="1000" height="800" onmouseout="MouseEvent_Out(event)"
+		onmouseover="MouseEvent_Over(event)" onmousedown="MouseEvent_Down(event)" onmouseup="MouseEvent_Up(event)"
+		onmousemove="MouseEvent_Move(event)">
+		Your browser doesn't support the HTML5 element canvas.
+	</canvas>
+	<form name="f" id="f">
+		<label for="movement_style">Formation Movement Style (0, 1, 2)</label>
+		<input type="number" name="movement_style" id="movement_style" min="0" max="2" value="2"><br>
+		<label for="movement_speed">Formation Speed (0.0 ... 10.0)</label>
+		<input type="number" name="movement_speed" id="movement_speed" min="0.0" max="10.0" step="0.25" value="1.0" />
+	</form>
 
-<form>
-<canvas id="canvas" width="1000" height="800" 
-        onmouseout="MouseEvent_Out(event)"
-        onmouseover="MouseEvent_Over(event)"
-        onmousedown="MouseEvent_Down(event)" 
-        onmouseup="MouseEvent_Up(event)" 
-        onmousemove="MouseEvent_Move(event)">
-Your browser doesn't support the HTML5 element canvas.
-</canvas>  
-<br/>
-<form name="f" id="f">
-Formation Movement Style (0, 1, 2) <input name="movement_style" id="movement_style" min="0" max="2" value="2" type="number" /> 
-<br />
-Formation Speed (0.0 ... 10.0)<input type="number" name="movement_speed" id="movement_speed" min="0.0" max="10.0" step="0.25" value="1.0" />
-<br />
-</form>
+	<script src="render.js"></script>
+	<script src="vector.js"></script>
+	<script src="formation.js"></script>
+	<script src="main.js"></script>
 
-<script src="render.js"></script>
-<script src="vector.js"></script>
-<script src="formation.js"></script>
-<script src="main.js"></script>
+	<script type="text/javascript">
 
-<script type="text/javascript">
+		var mouseStateButton = "Up";
+		var mouseStateHover = "Outside";
 
-var mouseStateButton = "Up";
-var mouseStateHover  = "Outside";
-
-function MouseEvent_Down(event)
-{
-    mouseStateButton = "Down";
-	FormationDemo.SetTargetPos(event.clientX, event.clientY);
-	FormationDemo.Pause(true);
-}
-
-function MouseEvent_Up(event)
-{
-	mouseStateButton = "Up";
-	FormationDemo.Pause(false);
-}
-
-function MouseEvent_Over(event)
-{
-	mouseStateHover = "Inside";
-}
-
-function MouseEvent_Out(event)
-{
-	mouseStateHover = "Outside";
-	
-	if (mouseStateButton == "Down")
-	{
-		mouseStateButton = "Up";
-		FormationDemo.Pause(false);
-	}
-}
-
-function MouseEvent_Move(event)
-{
-	if (event.button == 0)
-	{
-		if (mouseStateButton == "Down")
-		{
-			FormationDemo.SetTargetVector(event.clientX, event.clientY);
+		function MouseEvent_Down(event) {
+			mouseStateButton = "Down";
+			FormationDemo.SetTargetPos(event.clientX, event.clientY);
+			FormationDemo.Pause(true);
 		}
-	}
-}
 
-function init() 
-{
-	FormationDemo.Init();
-	
-	var onEachFrame;
-	if (window.webkitRequestAnimationFrame) 
-	{
-		onEachFrame = function(cb) 
-		{
-			var _cb = function() 
-			{ 
-				cb(); 
-				webkitRequestAnimationFrame(_cb); 
-			}
-			_cb();
-		};
-	} else if (window.mozRequestAnimationFrame) {
-		onEachFrame = function(cb) 
-		{
-			var _cb = function() 
-			{ 
-				cb(); 
-				mozRequestAnimationFrame(_cb); 
-			}
-			_cb();
-		};
-	} else {
-		onEachFrame = function(cb) 
-		{
-			setInterval(cb, 1000 / 60);
+		function MouseEvent_Up(event) {
+			mouseStateButton = "Up";
+			FormationDemo.Pause(false);
 		}
-	}
 
-	window.onEachFrame = onEachFrame;
-	window.onEachFrame(FormationDemo.Run);
-};
+		function MouseEvent_Over(event) {
+			mouseStateHover = "Inside";
+		}
 
-window.setTimeout(function () { init(); }, 0);
+		function MouseEvent_Out(event) {
+			mouseStateHover = "Outside";
+			if (mouseStateButton == "Down") {
+				mouseStateButton = "Up";
+				FormationDemo.Pause(false);
+			}
+		}
 
-</script>
+		function MouseEvent_Move(event) {
+			if (event.button == 0) {
+				if (mouseStateButton == "Down") {
+					FormationDemo.SetTargetVector(event.clientX, event.clientY);
+				}
+			}
+		}
 
-</body></html>
+		function init() {
+			FormationDemo.Init();
+
+			var onEachFrame;
+			if (window.webkitRequestAnimationFrame) {
+				onEachFrame = function (cb) {
+					var _cb = function () {
+						cb();
+						webkitRequestAnimationFrame(_cb);
+					}
+					_cb();
+				};
+			} else if (window.mozRequestAnimationFrame) {
+				onEachFrame = function (cb) {
+					var _cb = function () {
+						cb();
+						mozRequestAnimationFrame(_cb);
+					}
+					_cb();
+				};
+			} else {
+				onEachFrame = function (cb) {
+					setInterval(cb, 1000 / 60);
+				}
+			}
+
+			window.onEachFrame = onEachFrame;
+			window.onEachFrame(FormationDemo.Run);
+		};
+
+		window.setTimeout(function () { init(); }, 0);
+
+	</script>
+</body>
+
+</html>
