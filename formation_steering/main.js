@@ -13,7 +13,7 @@ var FormationDemo = (function ()
 	    50,                     // Turn radius
 	    5                       // Unit radius
 	    );
-	var pTarget = new Vec2D(600, 600);
+	var pTarget = new Vec2D(700, 300);
 	var dTarget = new Vec2D(0, 1);
 	
     var angleStep = ((5 / 180) * Math.PI); // How far to go around the circles when generating the points on the path
@@ -65,9 +65,6 @@ var FormationDemo = (function ()
 	        ctx.closePath();
 	        ctx.stroke();
 	    }
-    		
-		//DrawVector(ctx, formation.pos, dt,  "rgb(0, 0, 64)",  "rgb(0, 0, 64)");
-		//DrawVector(ctx, c1, dt, "rgb(0, 0, 255)",  "rgb(0, 0, 255)");		
 		
         DrawCircle(ctx, c1_exit.x,  c1_exit.y,  5, "rgb(0, 128, 0)", 2, true);
 		DrawCircle(ctx, c2_enter.x, c2_enter.y, 5, "rgb(128, 0, 0)", 2, true);		
