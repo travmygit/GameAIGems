@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Formation Steering</title>
 </head>
 
@@ -27,9 +28,7 @@
 	<table>
 		<tr>
 			<td style="vertical-align: top;">
-				<canvas id="canvas" width="1000" height="500" onmouseout="MouseEvent_Out(event)"
-					onmouseover="MouseEvent_Over(event)" onmousedown="MouseEvent_Down(event)"
-					onmouseup="MouseEvent_Up(event)" onmousemove="MouseEvent_Move(event)">
+				<canvas id="canvas" width="1000" height="500">
 					Your browser doesn't support the HTML5 element canvas.
 				</canvas>
 			</td>
@@ -56,38 +55,40 @@
 		var mouseStateButton = "Up";
 		var mouseStateHover = "Outside";
 
-		function MouseEvent_Down(event) {
-			mouseStateButton = "Down";
-			FormationDemo.SetTargetPos(event.clientX, event.clientY);
-			FormationDemo.Pause(true);
-		}
+		var canvas = document.getElementById("canvas");
 
-		function MouseEvent_Up(event) {
+		canvas.addEventListener("mousedown", function (e) {
+			var rect = canvas.getBoundingClientRect();
+			mouseStateButton = "Down";
+			FormationDemo.SetTargetPos(event.clientX - rect.left, event.clientY - rect.top);
+			FormationDemo.Pause(true);
+		}, false);
+
+		canvas.addEventListener("mouseup", function (e) {
 			mouseStateButton = "Up";
 			FormationDemo.Pause(false);
-		}
+		}, false);
 
-		function MouseEvent_Over(event) {
-			mouseStateHover = "Inside";
-		}
+		canvas.addEventListener("mousemove", function (e) {
+			var rect = canvas.getBoundingClientRect();
+			if (mouseStateButton == "Down") {
+				FormationDemo.SetTargetPos(event.clientX - rect.left, event.clientY - rect.top);
+			}
+		}, false);
 
-		function MouseEvent_Out(event) {
+		canvas.addEventListener("mouseout", function (e) {
 			mouseStateHover = "Outside";
 			if (mouseStateButton == "Down") {
 				mouseStateButton = "Up";
 				FormationDemo.Pause(false);
 			}
-		}
+		}, false);
 
-		function MouseEvent_Move(event) {
-			if (event.button == 0) {
-				if (mouseStateButton == "Down") {
-					FormationDemo.SetTargetVector(event.clientX, event.clientY);
-				}
-			}
-		}
+		canvas.addEventListener("mouseover", function (e) {
+			mouseStateHover = "Inside";
+		}, false);
 
-		function init() {
+		window.setTimeout(function () {
 			FormationDemo.Init();
 
 			var onEachFrame;
@@ -115,9 +116,7 @@
 
 			window.onEachFrame = onEachFrame;
 			window.onEachFrame(FormationDemo.Run);
-		};
-
-		window.setTimeout(function () { init(); }, 0);
+		}, 0);
 
 	</script>
 </body>
